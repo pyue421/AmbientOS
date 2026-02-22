@@ -2,6 +2,7 @@ import SwiftUI
 
 @MainActor
 final class AtmosphereState: ObservableObject {
+    @Published var isEnabled: Bool = true
     @Published private(set) var selectedMode: AmbientMode = .studio
     @Published var overlayStyle: OverlayStyle
     @Published var cursorStyle: CursorStyle
@@ -60,4 +61,3 @@ final class AtmosphereState: ObservableObject {
         }
     }
 }
-

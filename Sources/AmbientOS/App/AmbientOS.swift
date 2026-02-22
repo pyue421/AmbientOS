@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct AmbientOSApp: App {
+struct AmbientOS: App {
     @StateObject private var atmosphereState = AtmosphereState()
     @StateObject private var runtime = AtmosphereRuntime()
 
@@ -9,7 +9,7 @@ struct AmbientOSApp: App {
         MenuBarExtra("AmbientOS", systemImage: "sun.horizon.circle") {
             MenuBarContentView()
                 .environmentObject(atmosphereState)
-                .frame(minWidth: 320)
+                .frame(minWidth: 320) // Set a minimum width for the menu bar
                 .onAppear {
                     runtime.start(with: atmosphereState)
                 }

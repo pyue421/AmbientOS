@@ -4,7 +4,7 @@ struct OverlayView: View {
     @EnvironmentObject private var state: AtmosphereState
 
     var body: some View {
-        let style = state.overlayStyle
+        let style = state.isEnabled ? state.overlayStyle : .neutral
         ZStack {
             style.tintColor
                 .opacity(style.opacity)
@@ -59,4 +59,3 @@ struct OverlayView: View {
         .blendMode(.multiply)
     }
 }
-

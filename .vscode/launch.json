@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:AmbientOS}",
+            "name": "Debug AmbientOS",
+            "target": "AmbientOS",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug AmbientOS"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:AmbientOS}",
+            "name": "Release AmbientOS",
+            "target": "AmbientOS",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release AmbientOS"
+        }
+    ]
+}

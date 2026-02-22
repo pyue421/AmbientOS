@@ -10,6 +10,7 @@ final class CursorWindowController {
     private var globalMonitor: Any?
     private var screenCancellable: AnyCancellable?
     private var stateCancellable: AnyCancellable?
+    private var enabledCancellable: AnyCancellable?
     private var terminationCancellable: AnyCancellable?
     private var didHideSystemCursor = false
 
@@ -19,9 +20,15 @@ final class CursorWindowController {
             self?.model.cursorStyle = style
         }
         model.cursorStyle = state.cursorStyle
+        enabledCancellable = state.$isEnabled.sink { [weak self] isEnabled in
+            self?.model.isEnabled = isEnabled
+            self?.updateSystemCursorVisibility(enabled: isEnabled)
+        }
+        model.isEnabled = state.isEnabled
 
         installMouseMonitors()
         updateMousePosition(NSEvent.mouseLocation)
+        updateSystemCursorVisibility(enabled: state.isEnabled)
 
         screenCancellable = NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)
             .sink { [weak self] _ in
@@ -58,11 +65,6 @@ final class CursorWindowController {
         newWindow.orderFrontRegardless()
 
         window = newWindow
-
-        if !didHideSystemCursor {
-            NSCursor.hide()
-            didHideSystemCursor = true
-        }
     }
 
     private func installMouseMonitors() {
@@ -108,6 +110,21 @@ final class CursorWindowController {
             NSEvent.removeMonitor(globalMonitor)
             self.globalMonitor = nil
         }
+        if didHideSystemCursor {
+            NSCursor.unhide()
+            didHideSystemCursor = false
+        }
+    }
+
+    private func updateSystemCursorVisibility(enabled: Bool) {
+        if enabled {
+            if !didHideSystemCursor {
+                NSCursor.hide()
+                didHideSystemCursor = true
+            }
+            return
+        }
+
         if didHideSystemCursor {
             NSCursor.unhide()
             didHideSystemCursor = false

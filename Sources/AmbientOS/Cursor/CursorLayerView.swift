@@ -8,17 +8,19 @@ struct CursorLayerView: View {
             let point = convertedPoint(from: model.cursorPoint, height: proxy.size.height)
 
             ZStack {
-                ForEach(Array(model.trailPoints.enumerated()), id: \.offset) { index, trailPoint in
-                    Circle()
-                        .fill(Color.white.opacity(0.2))
-                        .frame(width: 5, height: 5)
-                        .position(convertedPoint(from: trailPoint, height: proxy.size.height))
-                        .opacity(Double(index + 1) / Double(max(1, model.trailPoints.count)))
-                }
+                if model.isEnabled {
+                    ForEach(Array(model.trailPoints.enumerated()), id: \.offset) { index, trailPoint in
+                        Circle()
+                            .fill(Color.white.opacity(0.2))
+                            .frame(width: 5, height: 5)
+                            .position(convertedPoint(from: trailPoint, height: proxy.size.height))
+                            .opacity(Double(index + 1) / Double(max(1, model.trailPoints.count)))
+                    }
 
-                cursorShape(for: model.cursorStyle)
-                    .position(point)
-                    .animation(.easeInOut(duration: 0.2), value: model.cursorStyle)
+                    cursorShape(for: model.cursorStyle)
+                        .position(point)
+                        .animation(.easeInOut(duration: 0.2), value: model.cursorStyle)
+                }
             }
             .onAppear { model.canvasSize = proxy.size }
             .onChange(of: proxy.size) { newSize in
