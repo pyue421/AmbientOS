@@ -1,12 +1,11 @@
-# AmbientOS (Frontend Prototype)
+# AmbientOS 
 
 AmbientOS is a SwiftUI macOS menu bar prototype for a design-first atmosphere layer.
 
 ## What is implemented
 - Menu bar app with modes: Studio, Minimal, Focused, Custom
 - Full-screen click-through overlay (all screens)
-- Dynamic cursor layer with minimal shape or emoji mode
-- Optional cursor trail
+- Dynamic cursor layer with custom emoji 
 - Smooth mode transitions and centralized state management
 
 ## Run
