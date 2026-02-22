@@ -19,6 +19,8 @@ struct MenuBarContentView: View {
             } else {
                 customControls
             }
+
+            soundControls
         }
         .padding(16)
         .onAppear {
@@ -123,11 +125,12 @@ struct MenuBarContentView: View {
             Text("Cursor")
                 .font(.subheadline.weight(.semibold))
 
-            Picker("Cursor", selection: cursorCustomizationBinding) {
+            Picker("", selection: cursorCustomizationBinding) {
                 Text("Default").tag(CursorCustomization.default)
                 Text("Custom").tag(CursorCustomization.custom)
             }
             .pickerStyle(.segmented)
+            .labelsHidden()
 
             if cursorCustomizationBinding.wrappedValue == .custom {
                 Picker("Shape", selection: customCursorShapeBinding) {
@@ -165,10 +168,57 @@ struct MenuBarContentView: View {
         .opacity(state.isEnabled ? 1.0 : 0.55)
     }
 
+    private var soundControls: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Divider()
+
+            HStack {
+                Text("Sound")
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                Toggle("", isOn: soundEnabledBinding)
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+            }
+
+            if state.soundEnabled {
+                Text(soundModeLabel(for: state.selectedMode))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Text(state.nowPlayingText)
+                    .font(.caption)
+                    .lineLimit(2)
+                    .textSelection(.enabled)
+
+                if state.selectedMode == .custom {
+                    TextField("Spotify playlist URL", text: customPlaylistURLBinding)
+                        .textFieldStyle(.roundedBorder)
+                }
+            }
+        }
+        .disabled(!state.isEnabled)
+        .opacity(state.isEnabled ? 1.0 : 0.55)
+    }
+
     private var appEnabledBinding: Binding<Bool> {
         Binding(
             get: { state.isEnabled },
             set: { state.isEnabled = $0 }
+        )
+    }
+
+    private var soundEnabledBinding: Binding<Bool> {
+        Binding(
+            get: { state.soundEnabled },
+            set: { state.soundEnabled = $0 }
+        )
+    }
+
+    private var customPlaylistURLBinding: Binding<String> {
+        Binding(
+            get: { state.customPlaylistURL },
+            set: { state.customPlaylistURL = $0 }
         )
     }
 
@@ -246,6 +296,19 @@ struct MenuBarContentView: View {
 
     private var emojiChoices: [String] {
         ["✨", "🎯", "🫧", "🌙", "🔥", "💡", "🧠"]
+    }
+
+    private func soundModeLabel(for mode: AmbientMode) -> String {
+        switch mode {
+        case .studio:
+            return "Studio playlist"
+        case .focused:
+            return "No music in Focused mode"
+        case .minimal:
+            return "Ambient playlist"
+        case .custom:
+            return "Custom playlist"
+        }
     }
 }
 

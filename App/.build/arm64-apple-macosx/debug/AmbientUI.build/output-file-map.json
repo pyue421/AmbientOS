@@ -65,6 +65,13 @@
     "swift-dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayStyle.swiftdeps",
     "diagnostics": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayStyle.dia"
   },
+  "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/soundSource.swift": {
+    "dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource.d",
+    "object": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource.swift.o",
+    "swiftmodule": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource~partial.swiftmodule",
+    "swift-dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource.swiftdeps",
+    "diagnostics": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource.dia"
+  },
   "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift": {
     "dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/OverlayView.d",
     "object": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/OverlayView.swift.o",
@@ -78,6 +85,13 @@
     "swiftmodule": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayWindowController~partial.swiftmodule",
     "swift-dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayWindowController.swiftdeps",
     "diagnostics": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayWindowController.dia"
+  },
+  "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Sound/SoundController.swift": {
+    "dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController.d",
+    "object": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController.swift.o",
+    "swiftmodule": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController~partial.swiftmodule",
+    "swift-dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController.swiftdeps",
+    "diagnostics": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController.dia"
   },
   "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/State/AtmosphereState.swift": {
     "dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/AtmosphereState.d",

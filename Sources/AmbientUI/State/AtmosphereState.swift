@@ -3,11 +3,14 @@ import SwiftUI
 @MainActor
 final class AtmosphereState: ObservableObject {
     @Published var isEnabled: Bool = true
+    @Published var soundEnabled: Bool = true
     @Published private(set) var selectedMode: AmbientMode = .studio
     @Published var overlayStyle: OverlayStyle
     @Published var cursorStyle: CursorStyle
     @Published var customOverlayStyle: OverlayStyle
     @Published var customCursorStyle: CursorStyle
+    @Published var customPlaylistURL: String = ""
+    @Published private(set) var nowPlayingText: String = "Not Playing"
 
     init() {
         let initial = ModePresets.preset(for: .studio)
@@ -59,5 +62,22 @@ final class AtmosphereState: ObservableObject {
         if selectedMode == .custom {
             apply(mode: .custom)
         }
+    }
+
+    var activeSoundSource: SoundSource {
+        guard isEnabled && soundEnabled else { return .none }
+        switch selectedMode {
+        case .custom:
+            guard !customPlaylistURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                return .none
+            }
+            return .playlist(url: customPlaylistURL)
+        default:
+            return ModePresets.preset(for: selectedMode).sound
+        }
+    }
+
+    func setNowPlayingText(_ value: String) {
+        nowPlayingText = value
     }
 }

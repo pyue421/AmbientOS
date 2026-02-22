@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/master.swiftdeps"
+  },
+  "/Users/yue.peng/Documents/AmbientOS/App/Sources/AmbientOS/AmbientOS.swift": {
+    "dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/AmbientOS.d",
+    "object": "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/AmbientOS.swift.o",
+    "swiftmodule": "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/AmbientOS~partial.swiftmodule",
+    "swift-dependencies": "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/AmbientOS.swiftdeps",
+    "diagnostics": "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/AmbientOS.dia"
+  }
+}

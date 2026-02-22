@@ -67,7 +67,6 @@
         "-Xfrontend",
         "AmbientOS_main",
         "-parse-as-library",
-        "-color-diagnostics",
         "-swift-version",
         "6",
         "-plugin-path",
@@ -163,11 +162,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/soundSource.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift"
         },
         {
           "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/overlayWindowController.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Sound/SoundController.swift"
         },
         {
           "kind" : "file",
@@ -203,8 +210,10 @@
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/cursorStyle.swift.o",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/modePreset.swift.o",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayStyle.swift.o",
+        "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource.swift.o",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/OverlayView.swift.o",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayWindowController.swift.o",
+        "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController.swift.o",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/AtmosphereState.swift.o",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/menuBar.swift.o",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/slider.swift.o"
@@ -230,7 +239,6 @@
         "-emit-objc-header",
         "-emit-objc-header-path",
         "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/include/AmbientUI-Swift.h",
-        "-color-diagnostics",
         "-swift-version",
         "6",
         "-plugin-path",
@@ -305,11 +313,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/OverlayView.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/overlayWindowController.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController.swift.o"
         },
         {
           "kind" : "file",
@@ -339,8 +355,10 @@
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/cursorStyle.swift",
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/modePreset.swift",
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/overlayStyle.swift",
+        "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/soundSource.swift",
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift",
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/overlayWindowController.swift",
+        "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Sound/SoundController.swift",
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/State/AtmosphereState.swift",
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/menuBar.swift",
         "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/slider.swift"
@@ -384,7 +402,6 @@
       "-Xfrontend",
       "AmbientOS_main",
       "-parse-as-library",
-      "-color-diagnostics",
       "-swift-version",
       "6",
       "-plugin-path",
@@ -437,8 +454,10 @@
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/cursorStyle.swift",
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/modePreset.swift",
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/overlayStyle.swift",
+      "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/soundSource.swift",
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift",
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/overlayWindowController.swift",
+      "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Sound/SoundController.swift",
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/State/AtmosphereState.swift",
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/menuBar.swift",
       "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/slider.swift",
@@ -464,7 +483,6 @@
       "-emit-objc-header",
       "-emit-objc-header-path",
       "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/include/AmbientUI-Swift.h",
-      "-color-diagnostics",
       "-swift-version",
       "6",
       "-plugin-path",
@@ -609,11 +627,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/soundSource.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift"
         },
         {
           "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/overlayWindowController.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Sound/SoundController.swift"
         },
         {
           "kind" : "file",
@@ -663,6 +689,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/SoundController.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/ambientMode.swift.o"
         },
         {
@@ -692,6 +722,10 @@
         {
           "kind" : "file",
           "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/slider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.build/soundSource.swift.o"
         }
       ],
       "outputFilePath" : "/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientUI.product/Objects.LinkFileList"

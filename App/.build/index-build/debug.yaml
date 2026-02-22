@@ -1,0 +1,66 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "AmbientOS-arm64-apple-macosx26.0-debug.module": ["<AmbientOS-arm64-apple-macosx26.0-debug.module>"]
+  "AmbientUI-arm64-apple-macosx26.0-debug.module": ["<AmbientUI-arm64-apple-macosx26.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<AmbientOS-arm64-apple-macosx26.0-debug.module>"]
+  "test": ["<AmbientOS-arm64-apple-macosx26.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/yue.peng/Documents/AmbientOS/App/Sources/AmbientOS/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/yue.peng/Documents/AmbientOS/App/Sources/AmbientOS/AmbientOS.swift"]
+    outputs: ["/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/sources"]
+    description: "Write auxiliary file /Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/sources"
+
+  "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientUI.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/App/AmbientOS.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/App/AtmosphereRuntime.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/CursorLayerView.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/CursorWindowController.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/cursorLayer.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/ambientMode.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/cursorStyle.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/modePreset.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/overlayStyle.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/overlayWindowController.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/State/AtmosphereState.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/menuBar.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/slider.swift"]
+    outputs: ["/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientUI.build/sources"]
+    description: "Write auxiliary file /Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientUI.build/sources"
+
+  "/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<AmbientOS-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules/AmbientOS.swiftmodule"]
+    outputs: ["<AmbientOS-arm64-apple-macosx26.0-debug.module>"]
+
+  "<AmbientUI-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules/AmbientUI.swiftmodule"]
+    outputs: ["<AmbientUI-arm64-apple-macosx26.0-debug.module>"]
+
+  "C.AmbientOS-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/yue.peng/Documents/AmbientOS/App/Sources/AmbientOS/AmbientOS.swift","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/libAmbientUI.dylib","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/sources"]
+    outputs: ["/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules/AmbientOS.swiftmodule"]
+    description: "Compiling Swift Module 'AmbientOS' (1 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","AmbientOS","-emit-dependencies","-emit-module","-emit-module-path","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules/AmbientOS.swiftmodule","-output-file-map","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/output-file-map.json","-incremental","@/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientOS.build/sources","-I","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-Onone","-enable-testing","-j16","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","AmbientOS_main","-parse-as-library","-swift-version","6","-Xfrontend","-experimental-lazy-typecheck","-Xfrontend","-experimental-skip-all-function-bodies","-Xfrontend","-experimental-allow-module-with-compiler-errors","-Xfrontend","-empty-abi-descriptor","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","app"]
+
+  "C.AmbientUI-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/App/AmbientOS.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/App/AtmosphereRuntime.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/CursorLayerView.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/CursorWindowController.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/cursorLayer.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/ambientMode.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/cursorStyle.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/modePreset.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/overlayStyle.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/overlayWindowController.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/State/AtmosphereState.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/menuBar.swift","/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/slider.swift","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientUI.build/sources"]
+    outputs: ["/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules/AmbientUI.swiftmodule"]
+    description: "Compiling Swift Module 'AmbientUI' (14 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","AmbientUI","-emit-dependencies","-emit-module","-emit-module-path","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules/AmbientUI.swiftmodule","-output-file-map","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientUI.build/output-file-map.json","-parse-as-library","-incremental","@/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientUI.build/sources","-I","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-Onone","-enable-testing","-j16","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/yue.peng/Documents/AmbientOS/App/.build/index-build/arm64-apple-macosx/debug/AmbientUI.build/include/AmbientUI-Swift.h","-swift-version","6","-Xfrontend","-experimental-lazy-typecheck","-Xfrontend","-experimental-skip-all-function-bodies","-Xfrontend","-experimental-allow-module-with-compiler-errors","-Xfrontend","-empty-abi-descriptor","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","ambientos"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/yue.peng/Documents/AmbientOS/App/Sources/AmbientOS/","/Users/yue.peng/Documents/AmbientOS/App/Package.swift","/Users/yue.peng/Documents/AmbientOS/App/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+
