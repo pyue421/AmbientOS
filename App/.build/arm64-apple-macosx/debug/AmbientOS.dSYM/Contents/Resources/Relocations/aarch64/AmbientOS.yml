@@ -1,0 +1,22 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/yue.peng/Documents/AmbientOS/App/.build/arm64-apple-macosx/debug/AmbientOS'
+relocations:
+  - { offset: 0xC8DC0, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAV4bodyQrvg', symObjAddr: 0x0, symBinAddr: 0x100000E20, symSize: 0x14C }
+  - { offset: 0xC8E6A, size: 0x8, addend: 0x0, symName: '_$s9AmbientUI0A7OSSceneVAC05SwiftB05SceneAAWl', symObjAddr: 0x190, symBinAddr: 0x100000FB0, symSize: 0x64 }
+  - { offset: 0xC8E7E, size: 0x8, addend: 0x0, symName: '_$s9AmbientUI0A7OSSceneVWOh', symObjAddr: 0x1F4, symBinAddr: 0x100001014, symSize: 0x50 }
+  - { offset: 0xC8E92, size: 0x8, addend: 0x0, symName: '_$s7SwiftUI11StateObjectV7StorageOy07AmbientB0010AtmosphereC0C_GWOe', symObjAddr: 0x244, symBinAddr: 0x100001064, symSize: 0x3C }
+  - { offset: 0xC8EA6, size: 0x8, addend: 0x0, symName: '_$s7SwiftUI11StateObjectV7StorageOy07AmbientB017AtmosphereRuntimeC_GWOe', symObjAddr: 0x280, symBinAddr: 0x1000010A0, symSize: 0x3C }
+  - { offset: 0xC8EBA, size: 0x8, addend: 0x0, symName: '_$s7SwiftUI11StateObjectV7StorageOy07AmbientB0010AtmosphereC0C_GWOy', symObjAddr: 0x2BC, symBinAddr: 0x1000010DC, symSize: 0x3C }
+  - { offset: 0xC8ECE, size: 0x8, addend: 0x0, symName: '_$s7SwiftUI11StateObjectV7StorageOy07AmbientB017AtmosphereRuntimeC_GWOy', symObjAddr: 0x2F8, symBinAddr: 0x100001118, symSize: 0x3C }
+  - { offset: 0xC8EE2, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAVAB7SwiftUI3AppAAWl', symObjAddr: 0x368, symBinAddr: 0x100001188, symSize: 0x68 }
+  - { offset: 0xC8EF6, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAV7SwiftUI3AppAA4BodyAcDP_AC5ScenePWT', symObjAddr: 0x414, symBinAddr: 0x100001234, symSize: 0x24 }
+  - { offset: 0xC8F0A, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAVMa', symObjAddr: 0x438, symBinAddr: 0x100001258, symSize: 0x14 }
+  - { offset: 0xC8F26, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAV4bodyQrvg', symObjAddr: 0x0, symBinAddr: 0x100000E20, symSize: 0x14C }
+  - { offset: 0xC8F82, size: 0x8, addend: 0x0, symName: '_$s7SwiftUI12SceneBuilderV15buildExpressionyxxAA0C0RzlFZ', symObjAddr: 0x14C, symBinAddr: 0x100000F6C, symSize: 0x44 }
+  - { offset: 0xC8FB7, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAV5$mainyyFZ', symObjAddr: 0x334, symBinAddr: 0x100001154, symSize: 0x34 }
+  - { offset: 0xC8FD7, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAVABycfC', symObjAddr: 0x3D0, symBinAddr: 0x1000011F0, symSize: 0x4 }
+  - { offset: 0xC8FF8, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAV7SwiftUI3AppAacDP4body4BodyQzvgTW', symObjAddr: 0x3D4, symBinAddr: 0x1000011F4, symSize: 0x14 }
+  - { offset: 0xC9013, size: 0x8, addend: 0x0, symName: '_$s9AmbientOSAAV7SwiftUI3AppAacDPxycfCTW', symObjAddr: 0x3E8, symBinAddr: 0x100001208, symSize: 0x14 }
+  - { offset: 0xC9040, size: 0x8, addend: 0x0, symName: _AmbientOS_main, symObjAddr: 0x3FC, symBinAddr: 0x10000121C, symSize: 0x18 }
+...

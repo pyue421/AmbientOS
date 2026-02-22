@@ -8,9 +8,17 @@ let package = Package(
     platforms: [
         .macOS(.v13),
     ],
+    products: [
+        .library(
+            name: "AmbientUI",
+            type: .dynamic,
+            targets: ["AmbientUI"]
+        ),
+    ],
     targets: [
-        .executableTarget(
-            name: "AmbientOS"
+        .target(
+            name: "AmbientUI",
+            path: "Sources/AmbientUI"
         ),
     ]
 )

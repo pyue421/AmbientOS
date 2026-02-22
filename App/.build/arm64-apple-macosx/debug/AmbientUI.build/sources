@@ -1,0 +1,14 @@
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/App/AmbientOS.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/App/AtmosphereRuntime.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/CursorLayerView.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/CursorWindowController.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Cursor/cursorLayer.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/ambientMode.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/cursorStyle.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/modePreset.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Models/overlayStyle.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/OverlayView.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/Overlay/overlayWindowController.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/State/AtmosphereState.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/menuBar.swift
+/Users/yue.peng/Documents/AmbientOS/Sources/AmbientUI/UI/slider.swift
