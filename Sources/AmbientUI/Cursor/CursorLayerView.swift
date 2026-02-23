@@ -38,7 +38,7 @@ struct CursorLayerView: View {
                     .font(.system(size: style.size))
             } else {
                 Circle()
-                    .stroke(Color.white.opacity(0.95), lineWidth: 1.5)
+                    .stroke(style.tint.color, lineWidth: 1.6)
                     .frame(width: style.size, height: style.size)
                     .background(Circle().fill(Color.black.opacity(0.15)))
             }

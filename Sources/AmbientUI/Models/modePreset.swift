@@ -21,7 +21,8 @@ enum ModePresets {
                     shape: .minimal,
                     emoji: "✍️",
                     trailingEnabled: true,
-                    size: 18
+                    size: 18,
+                    tint: .white
                 ),
                 sound: .playlist(
                     SoundPlaylist(
@@ -52,7 +53,8 @@ enum ModePresets {
                     shape: .minimal,
                     emoji: "•",
                     trailingEnabled: false,
-                    size: 14
+                    size: 14,
+                    tint: .white
                 ),
                 sound: .playlist(
                     SoundPlaylist(
@@ -71,15 +73,16 @@ enum ModePresets {
             return ModePreset(
                 overlay: OverlayStyle(
                     tintColor: Color(red: 0.82, green: 0.90, blue: 1.0),
-                    warmth: -0.25,
-                    opacity: 0.18,
+                    warmth: -0.2,
+                    opacity: 0,
                     vignette: 0.25
                 ),
                 cursor: CursorStyle(
-                    shape: .emoji,
-                    emoji: "🎯",
-                    trailingEnabled: true,
-                    size: 24
+                    shape: .minimal,
+                    emoji: "",
+                    trailingEnabled: false,
+                    size: 18,
+                    tint: .white
                 ),
                 sound: .none
             )
@@ -92,3 +95,5 @@ enum ModePresets {
 #Preview {
     Text("ModePreset Preview")
 }
+
+//pkill AmbientOS cd app swift run

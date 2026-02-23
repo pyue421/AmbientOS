@@ -11,6 +11,7 @@ final class AtmosphereState: ObservableObject {
     @Published var customOverlayStyle: OverlayStyle
     @Published var customCursorStyle: CursorStyle
     @Published var isCustomCursorEnabled: Bool = false
+    @Published var focusedCursorTint: CursorTint = .white
     @Published var customPlaylistURL: String = ""
     @Published var selectedFocusWindowID: Int?
     @Published private(set) var availableFocusWindows: [FocusTargetWindow] = []
@@ -55,6 +56,8 @@ final class AtmosphereState: ObservableObject {
         }
         if mode != .focused {
             focusedWindowFrame = nil
+        } else {
+            cursorStyle.tint = focusedCursorTint
         }
 
         // Future extension point:
@@ -72,6 +75,13 @@ final class AtmosphereState: ObservableObject {
         update(&customCursorStyle)
         if selectedMode == .custom {
             apply(mode: .custom)
+        }
+    }
+
+    func updateFocusedCursorTint(_ tint: CursorTint) {
+        focusedCursorTint = tint
+        if selectedMode == .focused {
+            cursorStyle.tint = tint
         }
     }
 

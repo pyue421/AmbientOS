@@ -1,3 +1,6 @@
+import AppKit
+import CoreImage
+import QuartzCore
 import SwiftUI
 
 struct OverlayView: View {
@@ -29,11 +32,7 @@ struct OverlayView: View {
             vignetteOverlay(strength: style.vignette)
 
             if shouldApplyFocusMask {
-                focusMaskLayer
-                    .mask(
-                        FocusCutoutMask(holeRect: localFocusHoleRect)
-                            .fill(Color.white, style: FillStyle(eoFill: true))
-                    )
+                FocusDesaturationView(holeRect: localFocusHoleRect)
             }
         }
         .ignoresSafeArea()
@@ -93,27 +92,80 @@ struct OverlayView: View {
         let localY = screenFrame.maxY - intersection.maxY
         return CGRect(x: localX, y: localY, width: intersection.width, height: intersection.height)
     }
+}
 
-    private var focusMaskLayer: some View {
-        ZStack {
-            Color.white.opacity(0.20).blendMode(.saturation)
-            Color.black.opacity(0.20)
-        }
+private struct FocusDesaturationView: NSViewRepresentable {
+    let holeRect: CGRect?
+
+    func makeNSView(context: Context) -> FocusDesaturationContainerView {
+        FocusDesaturationContainerView()
+    }
+
+    func updateNSView(_ nsView: FocusDesaturationContainerView, context: Context) {
+        nsView.update(holeRect: holeRect)
     }
 }
 
-private struct FocusCutoutMask: Shape {
-    let holeRect: CGRect?
+private final class FocusDesaturationContainerView: NSView {
+    private let effectView = NSVisualEffectView()
+    private let maskLayer = CAShapeLayer()
+    private let desaturationFilter = CIFilter(
+        name: "CIColorControls",
+        parameters: [
+            kCIInputSaturationKey: 0.0,
+            kCIInputContrastKey: 1.0,
+            kCIInputBrightnessKey: 0.0,
+        ]
+    )
 
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.addRect(rect)
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        wantsLayer = true
+        layer?.masksToBounds = true
+
+        effectView.state = .active
+        effectView.material = .hudWindow
+        effectView.blendingMode = .behindWindow
+        effectView.autoresizingMask = [.width, .height]
+        effectView.frame = bounds
+        effectView.wantsLayer = true
+        effectView.layer?.filters = desaturationFilter.map { [$0] }
+
+        maskLayer.fillRule = .evenOdd
+        effectView.layer?.mask = maskLayer
+
+        addSubview(effectView)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layout() {
+        super.layout()
+        effectView.frame = bounds
+    }
+
+    func update(holeRect: CGRect?) {
+        let frameRect = bounds
+        let path = CGMutablePath()
+        path.addRect(frameRect)
+
         if let holeRect {
-            path.addRoundedRect(
-                in: holeRect.insetBy(dx: -6, dy: -6),
-                cornerSize: CGSize(width: 10, height: 10)
+            path.addPath(
+                CGPath(
+                    roundedRect: holeRect.insetBy(dx: -6, dy: -6),
+                    cornerWidth: 10,
+                    cornerHeight: 10,
+                    transform: nil
+                )
             )
         }
-        return path
+
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        maskLayer.frame = frameRect
+        maskLayer.path = path
+        CATransaction.commit()
     }
 }

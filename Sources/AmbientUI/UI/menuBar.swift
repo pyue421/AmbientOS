@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import WebKit
 
@@ -78,10 +79,22 @@ struct MenuBarContentView: View {
 
             if state.selectedMode == .focused {
                 focusWindowPicker
+                focusCursorColorControl
             }
         }
         .disabled(!state.isEnabled)
         .opacity(state.isEnabled ? 1.0 : 0.55)
+    }
+
+    private var focusCursorColorControl: some View {
+        HStack {
+            Text("Cursor Color")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Spacer()
+            ColorPicker("", selection: focusedCursorColorBinding, supportsOpacity: false)
+                .labelsHidden()
+        }
     }
 
     private var focusWindowPicker: some View {
@@ -162,6 +175,13 @@ struct MenuBarContentView: View {
             .labelsHidden()
 
             if cursorCustomizationBinding.wrappedValue == .custom {
+                Picker("", selection: customCursorShapeBinding) {
+                    ForEach(CursorShape.allCases) { shape in
+                        Text(shape.rawValue).tag(shape)
+                    }
+                }
+                .labelsHidden()
+
                 if state.customCursorStyle.shape == .emoji {
                     Menu {
                         ForEach(emojiChoices, id: \.self) { emoji in
@@ -246,6 +266,22 @@ struct MenuBarContentView: View {
         )
     }
 
+    private var focusedCursorColorBinding: Binding<Color> {
+        Binding(
+            get: { state.focusedCursorTint.color },
+            set: { newColor in
+                guard let nsColor = NSColor(newColor).usingColorSpace(.deviceRGB) else { return }
+                let tint = CursorTint(
+                    red: Double(nsColor.redComponent),
+                    green: Double(nsColor.greenComponent),
+                    blue: Double(nsColor.blueComponent),
+                    alpha: 0.95
+                )
+                state.updateFocusedCursorTint(tint)
+            }
+        )
+    }
+
     private var customPlaylistCard: some View {
         Group {
             let trimmed = state.customPlaylistURL.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -260,15 +296,19 @@ struct MenuBarContentView: View {
 
     private var cursorCustomizationBinding: Binding<CursorCustomization> {
         Binding(
-            get: { state.isCustomCursorEnabled ? .custom : .default },
+            get: { state.customCursorStyle == .default ? .default : .custom },
             set: { newValue in
                 switch newValue {
                 case .default:
-                    state.isCustomCursorEnabled = false
                     state.updateCustomCursor { $0 = .default }
                 case .custom:
-                    state.isCustomCursorEnabled = true
-                    state.updateCustomCursor { $0.shape = .minimal }
+                    if state.customCursorStyle == .default {
+                        state.updateCustomCursor {
+                            $0.shape = .emoji
+                            $0.emoji = "🎯"
+                            $0.trailingEnabled = true
+                        }
+                    }
                 }
             }
         )
@@ -297,6 +337,15 @@ struct MenuBarContentView: View {
             get: { state.customOverlayStyle.vignette },
             set: { newValue in
                 state.updateCustomOverlay { $0.vignette = newValue }
+            }
+        )
+    }
+
+    private var customCursorShapeBinding: Binding<CursorShape> {
+        Binding(
+            get: { state.customCursorStyle.shape },
+            set: { newValue in
+                state.updateCustomCursor { $0.shape = newValue }
             }
         )
     }

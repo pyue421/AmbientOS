@@ -6,6 +6,7 @@ final class AtmosphereRuntime: ObservableObject {
     private let cursorController = CursorWindowController()
     private let soundController = SoundController()
     private let focusWindowController = FocusWindowController()
+    private let pomodoroWindowController = PomodoroWindowController()
     private var didStart = false
 
     func start(with state: AtmosphereState) {
@@ -16,5 +17,6 @@ final class AtmosphereRuntime: ObservableObject {
         cursorController.start(with: state)
         soundController.start(with: state)
         focusWindowController.start(with: state)
+        pomodoroWindowController.start(with: state)
     }
 }
