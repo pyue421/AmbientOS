@@ -23,7 +23,22 @@ enum ModePresets {
                     trailingEnabled: true,
                     size: 18
                 ),
-                sound: .playlist(url: "https://open.spotify.com/playlist/5m7f5oUSJ3iT0Sfnw8Sw9k?si=c6df4c49b7764639")
+                sound: .playlist(
+                    SoundPlaylist(
+                        id: "studio-default",
+                        title: "Studio Ambience",
+                        tracks: [
+                            SoundTrack(
+                                title: "Studio Glow",
+                                source: .bundled(name: "studio_glow", ext: "wav", subdirectory: "Audio/studio")
+                            ),
+                            SoundTrack(
+                                title: "Studio Night",
+                                source: .bundled(name: "studio_night", ext: "wav", subdirectory: "Audio/studio")
+                            ),
+                        ]
+                    )
+                )
             )
         case .minimal:
             return ModePreset(
@@ -39,7 +54,18 @@ enum ModePresets {
                     trailingEnabled: false,
                     size: 14
                 ),
-                sound: .playlist(url: "https://open.spotify.com/playlist/37i9dQZF1DX4PP3DA4J0N8")
+                sound: .playlist(
+                    SoundPlaylist(
+                        id: "minimal-default",
+                        title: "Minimal Ambience",
+                        tracks: [
+                            SoundTrack(
+                                title: "Minimal Breeze",
+                                source: .bundled(name: "minimal_breeze", ext: "wav", subdirectory: "Audio/minimal")
+                            ),
+                        ]
+                    )
+                )
             )
         case .focused:
             return ModePreset(
@@ -62,7 +88,6 @@ enum ModePresets {
         }
     }
 }
-
 
 #Preview {
     Text("ModePreset Preview")

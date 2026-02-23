@@ -18,7 +18,10 @@ let package = Package(
     targets: [
         .target(
             name: "AmbientUI",
-            path: "Sources/AmbientUI"
+            path: "Sources/AmbientUI",
+            resources: [
+                .process("Resources"),
+            ]
         ),
     ]
 )

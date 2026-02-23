@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 @MainActor
@@ -9,8 +10,11 @@ final class AtmosphereState: ObservableObject {
     @Published var cursorStyle: CursorStyle
     @Published var customOverlayStyle: OverlayStyle
     @Published var customCursorStyle: CursorStyle
+    @Published var isCustomCursorEnabled: Bool = false
     @Published var customPlaylistURL: String = ""
-    @Published private(set) var nowPlayingText: String = "Not Playing"
+    @Published var selectedFocusWindowID: Int?
+    @Published private(set) var availableFocusWindows: [FocusTargetWindow] = []
+    @Published private(set) var focusedWindowFrame: CGRect?
 
     init() {
         let initial = ModePresets.preset(for: .studio)
@@ -46,6 +50,13 @@ final class AtmosphereState: ObservableObject {
             applyChanges()
         }
 
+        if mode == .focused, selectedFocusWindowID == nil {
+            selectedFocusWindowID = availableFocusWindows.first?.id
+        }
+        if mode != .focused {
+            focusedWindowFrame = nil
+        }
+
         // Future extension point:
         // Trigger sound scene transitions / Focus Mode orchestration here.
     }
@@ -68,16 +79,28 @@ final class AtmosphereState: ObservableObject {
         guard isEnabled && soundEnabled else { return .none }
         switch selectedMode {
         case .custom:
-            guard !customPlaylistURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                return .none
-            }
-            return .playlist(url: customPlaylistURL)
+            return .none
         default:
             return ModePresets.preset(for: selectedMode).sound
         }
     }
 
-    func setNowPlayingText(_ value: String) {
-        nowPlayingText = value
+    func setAvailableFocusWindows(_ windows: [FocusTargetWindow]) {
+        availableFocusWindows = windows
+
+        if let current = selectedFocusWindowID,
+           !windows.contains(where: { $0.id == current }) {
+            selectedFocusWindowID = nil
+            focusedWindowFrame = nil
+        }
+
+        if selectedMode == .focused, selectedFocusWindowID == nil {
+            selectedFocusWindowID = windows.first?.id
+        }
     }
+
+    func setFocusedWindowFrame(_ frame: CGRect?) {
+        focusedWindowFrame = frame
+    }
+
 }

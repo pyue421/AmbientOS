@@ -1,4 +1,5 @@
 import SwiftUI
+import WebKit
 
 #Preview {
     MenuBarContentView()
@@ -47,7 +48,7 @@ struct MenuBarContentView: View {
     private var header: some View {
         HStack {
             Text("AmbientOS")
-                .font(.custom("Snell Roundhand", size: 21))
+                .font(.custom("Snell Roundhand", size: 19))
             Spacer()
             Toggle("", isOn: appEnabledBinding)
                 .labelsHidden()
@@ -68,13 +69,41 @@ struct MenuBarContentView: View {
     }
 
     private var modeCards: some View {
-        HStack(spacing: 12) {
-            modeCard(for: .studio)
-            modeCard(for: .focused)
-            modeCard(for: .minimal)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                modeCard(for: .studio)
+                modeCard(for: .focused)
+                modeCard(for: .minimal)
+            }
+
+            if state.selectedMode == .focused {
+                focusWindowPicker
+            }
         }
         .disabled(!state.isEnabled)
         .opacity(state.isEnabled ? 1.0 : 0.55)
+    }
+
+    private var focusWindowPicker: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Focus Window")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Picker("", selection: focusWindowBinding) {
+                Text("Select a window").tag(Optional<Int>.none)
+                ForEach(state.availableFocusWindows) { window in
+                    Text(window.displayName).tag(Optional(window.id))
+                }
+            }
+            .labelsHidden()
+
+            if state.availableFocusWindows.isEmpty {
+                Text("No eligible windows found.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
 
     private func modeCard(for mode: AmbientMode) -> some View {
@@ -133,33 +162,29 @@ struct MenuBarContentView: View {
             .labelsHidden()
 
             if cursorCustomizationBinding.wrappedValue == .custom {
-                Picker("Shape", selection: customCursorShapeBinding) {
-                    ForEach(CursorShape.allCases) { shape in
-                        Text(shape.rawValue).tag(shape)
-                    }
-                }
-
-                Menu {
-                    ForEach(emojiChoices, id: \.self) { emoji in
-                        Button(emoji) {
-                            state.updateCustomCursor { $0.emoji = emoji }
+                if state.customCursorStyle.shape == .emoji {
+                    Menu {
+                        ForEach(emojiChoices, id: \.self) { emoji in
+                            Button(emoji) {
+                                state.updateCustomCursor { $0.emoji = emoji }
+                            }
                         }
+                    } label: {
+                        HStack {
+                            Text("Choose emoji")
+                            Spacer()
+                            Text(state.customCursorStyle.emoji)
+                            Image(systemName: "chevron.down")
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(nsColor: .controlBackgroundColor))
+                        )
                     }
-                } label: {
-                    HStack {
-                        Text("Choose emoji")
-                        Spacer()
-                        Text(state.customCursorStyle.emoji)
-                        Image(systemName: "chevron.down")
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(nsColor: .controlBackgroundColor))
-                    )
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
 
                 Toggle("Trailing Effect", isOn: customTrailingBinding)
             }
@@ -181,19 +206,11 @@ struct MenuBarContentView: View {
                     .toggleStyle(.switch)
             }
 
-            if state.soundEnabled {
-                Text(soundModeLabel(for: state.selectedMode))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Text(state.nowPlayingText)
-                    .font(.caption)
-                    .lineLimit(2)
-                    .textSelection(.enabled)
-
+            if selectedTab == .custom && state.soundEnabled {
                 if state.selectedMode == .custom {
-                    TextField("Spotify playlist URL", text: customPlaylistURLBinding)
+                    TextField("Spotify playlist or album URL", text: customPlaylistURLBinding)
                         .textFieldStyle(.roundedBorder)
+                    customPlaylistCard
                 }
             }
         }
@@ -222,21 +239,36 @@ struct MenuBarContentView: View {
         )
     }
 
+    private var focusWindowBinding: Binding<Int?> {
+        Binding(
+            get: { state.selectedFocusWindowID },
+            set: { state.selectedFocusWindowID = $0 }
+        )
+    }
+
+    private var customPlaylistCard: some View {
+        Group {
+            let trimmed = state.customPlaylistURL.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let resource = SpotifyWebAPI.embedResource(from: trimmed),
+               let embedURL = SpotifyWebAPI.embedURL(for: resource) {
+                SpotifyEmbedView(url: embedURL)
+                    .frame(height: 156)
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            }
+        }
+    }
+
     private var cursorCustomizationBinding: Binding<CursorCustomization> {
         Binding(
-            get: { state.customCursorStyle == .default ? .default : .custom },
+            get: { state.isCustomCursorEnabled ? .custom : .default },
             set: { newValue in
                 switch newValue {
                 case .default:
+                    state.isCustomCursorEnabled = false
                     state.updateCustomCursor { $0 = .default }
                 case .custom:
-                    if state.customCursorStyle == .default {
-                        state.updateCustomCursor {
-                            $0.shape = .emoji
-                            $0.emoji = "🎯"
-                            $0.trailingEnabled = true
-                        }
-                    }
+                    state.isCustomCursorEnabled = true
+                    state.updateCustomCursor { $0.shape = .minimal }
                 }
             }
         )
@@ -269,15 +301,6 @@ struct MenuBarContentView: View {
         )
     }
 
-    private var customCursorShapeBinding: Binding<CursorShape> {
-        Binding(
-            get: { state.customCursorStyle.shape },
-            set: { newValue in
-                state.updateCustomCursor { $0.shape = newValue }
-            }
-        )
-    }
-
     private var customTrailingBinding: Binding<Bool> {
         Binding(
             get: { state.customCursorStyle.trailingEnabled },
@@ -298,17 +321,26 @@ struct MenuBarContentView: View {
         ["✨", "🎯", "🫧", "🌙", "🔥", "💡", "🧠"]
     }
 
-    private func soundModeLabel(for mode: AmbientMode) -> String {
-        switch mode {
-        case .studio:
-            return "Studio playlist"
-        case .focused:
-            return "No music in Focused mode"
-        case .minimal:
-            return "Ambient playlist"
-        case .custom:
-            return "Custom playlist"
-        }
+}
+
+private struct SpotifyEmbedView: NSViewRepresentable {
+    let url: URL
+
+    func makeNSView(context: Context) -> WKWebView {
+        let configuration = WKWebViewConfiguration()
+        configuration.allowsAirPlayForMediaPlayback = true
+        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
+
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.setValue(false, forKey: "drawsBackground")
+        webView.allowsMagnification = false
+        webView.load(URLRequest(url: url))
+        return webView
+    }
+
+    func updateNSView(_ webView: WKWebView, context: Context) {
+        guard webView.url != url else { return }
+        webView.load(URLRequest(url: url))
     }
 }
 

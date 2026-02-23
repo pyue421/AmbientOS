@@ -23,7 +23,7 @@ final class OverlayWindowController {
 
         for screen in NSScreen.screens {
             let window = OverlayWindow(screen: screen)
-            let view = OverlayView().environmentObject(state)
+            let view = OverlayView(screenFrame: screen.frame).environmentObject(state)
             let hostingView = NSHostingView(rootView: view)
             hostingView.frame = window.contentView?.bounds ?? .zero
             hostingView.autoresizingMask = [.width, .height]
@@ -55,4 +55,3 @@ final class OverlayWindow: NSWindow {
     override var canBecomeKey: Bool { false }
     override var canBecomeMain: Bool { false }
 }
-

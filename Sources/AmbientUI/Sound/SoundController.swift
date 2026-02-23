@@ -1,12 +1,15 @@
-import AppKit
+import AVFoundation
 import Combine
 import Foundation
 
 @MainActor
 final class SoundController {
     private var stateCancellable: AnyCancellable?
-    private var nowPlayingCancellable: AnyCancellable?
     private var lastSource: SoundSource = .none
+    private let player = AVQueuePlayer()
+    private var didSetupEndObserver = false
+    private var activePlaylist: SoundPlaylist?
+    private var activeURLs: [URL] = []
 
     func start(with state: AtmosphereState) {
         stateCancellable = Publishers.CombineLatest4(
@@ -15,24 +18,39 @@ final class SoundController {
             state.$selectedMode,
             state.$customPlaylistURL
         )
-        .sink { [weak self] _, _, _, _ in
-            self?.syncPlayback(for: state)
+        .sink { [weak self] isEnabled, soundEnabled, selectedMode, _ in
+            self?.syncPlayback(
+                source: self?.sourceFor(
+                    isEnabled: isEnabled,
+                    soundEnabled: soundEnabled,
+                    selectedMode: selectedMode
+                ) ?? .none
+            )
         }
 
-        nowPlayingCancellable = Timer.publish(every: 2.5, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.refreshNowPlaying(for: state)
-            }
-
-        syncPlayback(for: state)
-        refreshNowPlaying(for: state)
+        installEndObserverIfNeeded()
+        player.actionAtItemEnd = .advance
+        player.automaticallyWaitsToMinimizeStalling = false
+        syncPlayback(
+            source: sourceFor(
+                isEnabled: state.isEnabled,
+                soundEnabled: state.soundEnabled,
+                selectedMode: state.selectedMode
+            )
+        )
     }
 
-    private func syncPlayback(for state: AtmosphereState) {
-        let source = state.activeSoundSource
+    private func syncPlayback(source: SoundSource) {
+        if case .none = source {
+            pausePlayback()
+            lastSource = .none
+            return
+        }
+
         guard source != lastSource else {
-            refreshNowPlaying(for: state)
+            if let playlist = activePlaylist {
+                startPlayback(for: playlist)
+            }
             return
         }
 
@@ -40,134 +58,122 @@ final class SoundController {
 
         switch source {
         case .none:
-            pauseSpotify()
-            if state.selectedMode == .focused {
-                state.setNowPlayingText("Focused mode: no music")
-            } else if !state.soundEnabled || !state.isEnabled {
-                state.setNowPlayingText("Sound off")
-            } else if state.selectedMode == .custom {
-                state.setNowPlayingText("Add a Spotify playlist URL")
-            } else {
-                state.setNowPlayingText("Not Playing")
-            }
-        case .playlist(let url):
-            playPlaylist(urlString: url)
-            state.setNowPlayingText("Loading...")
+            pausePlayback()
+        case .playlist(let playlist):
+            startPlayback(for: playlist)
         }
     }
 
-    private func refreshNowPlaying(for state: AtmosphereState) {
-        if case .none = state.activeSoundSource {
+    private func sourceFor(isEnabled: Bool, soundEnabled: Bool, selectedMode: AmbientMode) -> SoundSource {
+        guard isEnabled, soundEnabled else { return .none }
+        guard selectedMode != .custom else { return .none }
+        return ModePresets.preset(for: selectedMode).sound
+    }
+
+    private func startPlayback(for playlist: SoundPlaylist) {
+        guard playlist != activePlaylist else {
+            if !player.items().isEmpty, player.rate == 0 {
+                player.playImmediately(atRate: 1.0)
+            }
             return
         }
 
-        guard let text = currentTrackText(), !text.isEmpty else {
+        let urls = playlist.tracks.compactMap(resolveURL(for:))
+        guard !urls.isEmpty else {
+            stopPlayback()
             return
         }
-        state.setNowPlayingText(text)
+
+        activePlaylist = playlist
+        activeURLs = urls
+        player.removeAllItems()
+        enqueueAllTracks()
+        player.playImmediately(atRate: 1.0)
     }
 
-    private func playPlaylist(urlString: String) {
-        let input = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !input.isEmpty else { return }
+    private func pausePlayback() {
+        player.pause()
+    }
 
-        let playlistURI = spotifyPlaylistURI(from: input)
-        let didOpenSpotifyURI: Bool
-        if let playlistURI, let uriURL = URL(string: playlistURI) {
-            didOpenSpotifyURI = NSWorkspace.shared.open(uriURL)
-        } else {
-            didOpenSpotifyURI = false
+    private func stopPlayback() {
+        player.pause()
+        player.removeAllItems()
+        activePlaylist = nil
+        activeURLs = []
+    }
+
+    private func enqueueAllTracks() {
+        for url in activeURLs {
+            let item = AVPlayerItem(url: url)
+            player.insert(item, after: nil)
         }
+    }
 
-        // If direct Spotify URI open fails, fall back to opening the provided URL.
-        if !didOpenSpotifyURI, let url = URL(string: input) {
-            _ = NSWorkspace.shared.open(url)
-        }
+    private func installEndObserverIfNeeded() {
+        guard !didSetupEndObserver else { return }
+        didSetupEndObserver = true
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleTrackDidEnd(_:)),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: nil
+        )
+    }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            if let playlistURI {
-                _ = self.executeAppleScript(
-                    """
-                    tell application "Spotify"
-                        activate
-                        try
-                            play track "\(playlistURI)"
-                        on error
-                            play
-                        end try
-                    end tell
-                    """
-                )
-            } else {
-                _ = self.executeAppleScript(
-                    """
-                    tell application "Spotify"
-                        activate
-                        play
-                    end tell
-                    """
-                )
+    @objc
+    private func handleTrackDidEnd(_ note: Notification) {
+        guard activePlaylist != nil else { return }
+        guard let finishedItem = note.object as? AVPlayerItem else { return }
+        guard activeURLs.count > 0 else { return }
+
+        // Keep looping by appending another item that matches the one that just finished.
+        if let asset = finishedItem.asset as? AVURLAsset {
+            let url = asset.url
+            if activeURLs.contains(url) {
+                player.insert(AVPlayerItem(url: url), after: nil)
             }
         }
-    }
 
-    private func pauseSpotify() {
-        _ = executeAppleScript(
-            """
-            tell application "Spotify"
-                pause
-            end tell
-            """
-        )
-    }
-
-    private func currentTrackText() -> String? {
-        let result = executeAppleScript(
-            """
-            try
-                tell application "Spotify"
-                    if player state is playing then
-                        return name of current track & " - " & artist of current track
-                    end if
-                    if player state is paused then
-                        return "Paused"
-                    end if
-                end tell
-            on error
-                return ""
-            end try
-            """
-        )
-        return result?.stringValue
-    }
-
-    private func spotifyPlaylistURI(from text: String) -> String? {
-        if text.hasPrefix("spotify:playlist:") {
-            return text
+        if player.rate == 0 {
+            player.play()
         }
+    }
 
-        guard let url = URL(string: text) else { return nil }
-        guard url.host?.contains("spotify.com") == true else { return nil }
+    private func resolveURL(for track: SoundTrack) -> URL? {
+        switch track.source {
+        case let .bundled(name, ext, subdirectory):
+            if let direct = Bundle.module.url(forResource: name, withExtension: ext, subdirectory: subdirectory) {
+                return direct
+            }
 
-        let pathComponents = url.pathComponents
-        guard let playlistIndex = pathComponents.firstIndex(of: "playlist"),
-              pathComponents.count > playlistIndex + 1 else {
+            if let root = Bundle.module.url(forResource: name, withExtension: ext) {
+                return root
+            }
+
+            if let nested = Bundle.module.url(
+                forResource: name,
+                withExtension: ext,
+                subdirectory: "Resources/\(subdirectory)"
+            ) {
+                return nested
+            }
+
+            let targetFile = "\(name).\(ext)"
+            let bundleRoot = Bundle.module.bundleURL
+            let candidates = [
+                bundleRoot.appendingPathComponent(targetFile),
+                bundleRoot.appendingPathComponent(subdirectory).appendingPathComponent(targetFile),
+                bundleRoot.appendingPathComponent("Resources").appendingPathComponent(subdirectory).appendingPathComponent(targetFile),
+            ]
+            for candidate in candidates where FileManager.default.fileExists(atPath: candidate.path) {
+                return candidate
+            }
             return nil
+        case let .remote(urlString):
+            guard let url = URL(string: urlString) else {
+                return nil
+            }
+            return url
         }
-
-        let rawPlaylistID = pathComponents[playlistIndex + 1]
-        let playlistID = rawPlaylistID.split(separator: "?").first.map(String.init) ?? rawPlaylistID
-        guard !playlistID.isEmpty else { return nil }
-        return "spotify:playlist:\(playlistID)"
-    }
-
-    private func executeAppleScript(_ source: String) -> NSAppleEventDescriptor? {
-        guard let script = NSAppleScript(source: source) else { return nil }
-        var error: NSDictionary?
-        let result = script.executeAndReturnError(&error)
-        if error != nil {
-            return nil
-        }
-        return result
     }
 }
