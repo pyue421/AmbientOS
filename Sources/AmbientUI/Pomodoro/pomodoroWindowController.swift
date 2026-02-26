@@ -48,8 +48,9 @@ final class PomodoroWindowController {
         newWindow.backgroundColor = .clear
         newWindow.hasShadow = false
         newWindow.ignoresMouseEvents = false
+        newWindow.isMovableByWindowBackground = true
 
-        let host = NSHostingView(rootView: PomodoroView(model: model))
+        let host = DraggablePomodoroHostingView(rootView: PomodoroView(model: model))
         host.frame = CGRect(origin: .zero, size: frame.size)
         host.autoresizingMask = [.width, .height]
         newWindow.contentView?.addSubview(host)
@@ -91,4 +92,8 @@ final class PomodoroWindowController {
             height: size.height
         )
     }
+}
+
+private final class DraggablePomodoroHostingView: NSHostingView<PomodoroView> {
+    override var mouseDownCanMoveWindow: Bool { true }
 }

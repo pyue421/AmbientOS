@@ -10,6 +10,7 @@ import WebKit
 struct MenuBarContentView: View {
     @EnvironmentObject private var state: AtmosphereState
     @State private var selectedTab: SettingsTab = .modes
+    @FocusState private var isEmojiFieldFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -171,27 +172,32 @@ struct MenuBarContentView: View {
                 .labelsHidden()
 
                 if state.customCursorStyle.shape == .emoji {
-                    Menu {
-                        ForEach(emojiChoices, id: \.self) { emoji in
-                            Button(emoji) {
-                                state.updateCustomCursor { $0.emoji = emoji }
-                            }
-                        }
-                    } label: {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Emoji")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+
                         HStack {
-                            Text("Choose emoji")
-                            Spacer()
-                            Text(state.customCursorStyle.emoji)
-                            Image(systemName: "chevron.down")
+                            TextField("Any macOS emoji", text: customEmojiBinding)
+                                .textFieldStyle(.roundedBorder)
+                                .focused($isEmojiFieldFocused)
+
+                            Button {
+                                isEmojiFieldFocused = true
+                                DispatchQueue.main.async {
+                                    NSApp.orderFrontCharacterPalette(nil)
+                                }
+                            } label: {
+                                Image(systemName: "face.smiling")
+                            }
+                            .buttonStyle(.bordered)
+                            .help("Open emoji picker")
                         }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color(nsColor: .controlBackgroundColor))
-                        )
+
+                        Text("Tip: Press Control-Command-Space to pick any emoji.")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
                     }
-                    .buttonStyle(.plain)
                 }
 
                 Toggle("Trailing Effect", isOn: customTrailingBinding)
@@ -276,8 +282,7 @@ struct MenuBarContentView: View {
                 case .custom:
                     if state.customCursorStyle == .default {
                         state.updateCustomCursor {
-                            $0.shape = .emoji
-                            $0.emoji = "🎯"
+                            $0.shape = .minimal
                             $0.trailingEnabled = true
                         }
                     }
@@ -322,6 +327,16 @@ struct MenuBarContentView: View {
         )
     }
 
+    private var customEmojiBinding: Binding<String> {
+        Binding(
+            get: { state.customCursorStyle.emoji },
+            set: { newValue in
+                let emoji = firstEmojiCharacter(in: newValue) ?? state.customCursorStyle.emoji
+                state.updateCustomCursor { $0.emoji = emoji }
+            }
+        )
+    }
+
     private var customTrailingBinding: Binding<Bool> {
         Binding(
             get: { state.customCursorStyle.trailingEnabled },
@@ -338,8 +353,15 @@ struct MenuBarContentView: View {
         }
     }
 
-    private var emojiChoices: [String] {
-        ["✨", "🎯", "🫧", "🌙", "🔥", "💡", "🧠"]
+    private func firstEmojiCharacter(in text: String) -> String? {
+        for character in text {
+            if character.unicodeScalars.contains(where: { scalar in
+                scalar.properties.isEmojiPresentation || scalar.properties.isEmoji
+            }) {
+                return String(character)
+            }
+        }
+        return nil
     }
 
 }
