@@ -23,7 +23,12 @@ final class OverlayWindowController {
 
         for screen in NSScreen.screens {
             let window = OverlayWindow(screen: screen)
-            let view = OverlayView(screenFrame: screen.frame).environmentObject(state)
+            let menuBarHeight = max(0, screen.frame.maxY - screen.visibleFrame.maxY)
+            let view = OverlayView(
+                screenFrame: screen.frame,
+                menuBarHeight: menuBarHeight
+            )
+            .environmentObject(state)
             let hostingView = NSHostingView(rootView: view)
             hostingView.frame = window.contentView?.bounds ?? .zero
             hostingView.autoresizingMask = [.width, .height]

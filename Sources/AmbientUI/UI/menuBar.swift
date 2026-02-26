@@ -79,22 +79,10 @@ struct MenuBarContentView: View {
 
             if state.selectedMode == .focused {
                 focusWindowPicker
-                focusCursorColorControl
             }
         }
         .disabled(!state.isEnabled)
         .opacity(state.isEnabled ? 1.0 : 0.55)
-    }
-
-    private var focusCursorColorControl: some View {
-        HStack {
-            Text("Cursor Color")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Spacer()
-            ColorPicker("", selection: focusedCursorColorBinding, supportsOpacity: false)
-                .labelsHidden()
-        }
     }
 
     private var focusWindowPicker: some View {
@@ -263,22 +251,6 @@ struct MenuBarContentView: View {
         Binding(
             get: { state.selectedFocusWindowID },
             set: { state.selectedFocusWindowID = $0 }
-        )
-    }
-
-    private var focusedCursorColorBinding: Binding<Color> {
-        Binding(
-            get: { state.focusedCursorTint.color },
-            set: { newColor in
-                guard let nsColor = NSColor(newColor).usingColorSpace(.deviceRGB) else { return }
-                let tint = CursorTint(
-                    red: Double(nsColor.redComponent),
-                    green: Double(nsColor.greenComponent),
-                    blue: Double(nsColor.blueComponent),
-                    alpha: 0.95
-                )
-                state.updateFocusedCursorTint(tint)
-            }
         )
     }
 

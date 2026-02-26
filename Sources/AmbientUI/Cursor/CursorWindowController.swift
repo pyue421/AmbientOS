@@ -20,15 +20,17 @@ final class CursorWindowController {
             self?.model.cursorStyle = style
         }
         model.cursorStyle = state.cursorStyle
-        enabledCancellable = state.$isEnabled.sink { [weak self] isEnabled in
-            self?.model.isEnabled = isEnabled
-            self?.updateSystemCursorVisibility(enabled: isEnabled)
-        }
-        model.isEnabled = state.isEnabled
+        enabledCancellable = Publishers.CombineLatest(state.$isEnabled, state.$isCustomCursorEnabled)
+            .sink { [weak self] isEnabled, isCustomCursorEnabled in
+                let shouldShowAmbientCursor = isEnabled && isCustomCursorEnabled
+                self?.model.isEnabled = shouldShowAmbientCursor
+                self?.updateSystemCursorVisibility(showAmbientCursor: shouldShowAmbientCursor)
+            }
+        model.isEnabled = state.isEnabled && state.isCustomCursorEnabled
+        updateSystemCursorVisibility(showAmbientCursor: model.isEnabled)
 
         installMouseMonitors()
         updateMousePosition(NSEvent.mouseLocation)
-        updateSystemCursorVisibility(enabled: state.isEnabled)
 
         screenCancellable = NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)
             .sink { [weak self] _ in
@@ -116,8 +118,8 @@ final class CursorWindowController {
         }
     }
 
-    private func updateSystemCursorVisibility(enabled: Bool) {
-        if enabled {
+    private func updateSystemCursorVisibility(showAmbientCursor: Bool) {
+        if showAmbientCursor {
             if !didHideSystemCursor {
                 NSCursor.hide()
                 didHideSystemCursor = true

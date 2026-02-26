@@ -5,6 +5,7 @@ import SwiftUI
 
 struct OverlayView: View {
     let screenFrame: CGRect
+    let menuBarHeight: CGFloat
     @EnvironmentObject private var state: AtmosphereState
 
     var body: some View {
@@ -37,6 +38,7 @@ struct OverlayView: View {
         }
         .ignoresSafeArea()
         .allowsHitTesting(false)
+        .mask(menuBarVisibilityMask)
         .animation(.easeInOut(duration: 0.35), value: style)
         .animation(.easeInOut(duration: 0.2), value: state.focusedWindowFrame)
     }
@@ -81,6 +83,19 @@ struct OverlayView: View {
 
     private var shouldApplyFocusMask: Bool {
         state.isEnabled && state.selectedMode == .focused
+    }
+
+    @ViewBuilder
+    private var menuBarVisibilityMask: some View {
+        if shouldApplyFocusMask && menuBarHeight > 0 {
+            VStack(spacing: 0) {
+                Color.clear
+                    .frame(height: menuBarHeight)
+                Color.black
+            }
+        } else {
+            Color.black
+        }
     }
 
     private var localFocusHoleRect: CGRect? {
